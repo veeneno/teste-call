@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>App de Chamada de Voz</title>
+</head>
+<body>
+    <h1>Chamada de Voz</h1>
+    <input id="username" placeholder="Escolha seu nome">
+    <button onclick="joinCall()">Entrar na Chamada</button>
+
+    <ul id="userList"></ul>
+
+    <script>
+        function joinCall() {
+            const username = document.getElementById('username').value;
+            window.api.joinCall(username);
+
+            window.api.onUserList((users) => {
+                const userList = document.getElementById('userList');
+                userList.innerHTML = '';
+                users.forEach(user => {
+                    const li = document.createElement('li');
+                    li.textContent = user;
+                    userList.appendChild(li);
+                });
+            });
+        }
+
+        async function captureAudio() {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const audioContext = new AudioContext();
+            const source = audioContext.createMediaStreamSource(stream);
+            const processor = audioContext.createScriptProcessor(1024, 1, 1);
+
+            processor.onaudioprocess = (e) => {
+                const audioData = e.inputBuffer.getChannelData(0);
+                window.api.sendAudio(audioData);
+            };
+
+            source.connect(processor);
+            processor.connect(audioContext.destination);
+
+            window.api.onAudioStream((audioData) => {
+                // Aqui você pode reproduzir o áudio recebido usando Web Audio API.
+            });
+        }
+
+        captureAudio();
+    </script>
+</body>
+</html>

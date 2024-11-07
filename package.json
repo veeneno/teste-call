@@ -1,0 +1,16 @@
+{
+  "name": "meu-app",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "server": "node server/index.js"
+  },
+  "dependencies": {
+    "electron": "^33.1.0",
+    "express": "^4.17.1",
+    "socket.io": "^4.0.0",
+    "socket.io-client": "^4.0.0",
+    "dotenv": "^8.2.0"
+  }
+}
